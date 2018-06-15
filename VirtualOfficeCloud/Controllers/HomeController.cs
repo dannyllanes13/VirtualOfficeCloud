@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace VirtualOfficeCloud.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HomeController : Controller
     {
+        [HttpGet]
         public IActionResult Index()
         {
             if (HttpContext.User.Identity.IsAuthenticated)

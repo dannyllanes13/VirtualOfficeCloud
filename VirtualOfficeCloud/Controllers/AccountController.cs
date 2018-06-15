@@ -11,7 +11,6 @@ using VirtualOfficeCloud.Utils.Interfaces;
 
 namespace VirtualOfficeCloud.Controllers
 {
-    [Authorize]
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
@@ -38,7 +37,7 @@ namespace VirtualOfficeCloud.Controllers
                     var result = await _userService.SignInAsyncByPassword(user, model.Password, false);
                     if (result)
                     {
-                        var results = _token.CreateToken(user.UserName, user.Email);                       
+                        var results = _token.CreateToken(user.UserName, user.Email);
                         return Ok(results);
                     }
                 }
@@ -46,6 +45,23 @@ namespace VirtualOfficeCloud.Controllers
 
             return BadRequest("Please check login values");
         }
+
+        //this is to log in user and create tokens
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> RefreshToken(string username)
+        {
+            var user = await _userService.FindByNameAsync(username);
+            if (user != null)
+            {
+                var results = _token.CreateToken(user.UserName, user.Email);
+                return Ok(results);
+            }
+
+            return BadRequest("User is not login.");
+        }
+
+
 
         [AllowAnonymous]
         [HttpGet]

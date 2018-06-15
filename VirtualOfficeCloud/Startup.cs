@@ -41,18 +41,16 @@ namespace VirtualOfficeCloud
                 o.Password.RequireUppercase = false;
                 o.Password.RequireNonAlphanumeric = false;
                 o.Password.RequiredLength = 6;
-                o.Lockout.DefaultLockoutTimeSpan = TimeSpan.Zero;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
             //this part is to use authentication in api
             services
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddAuthentication()
                 .AddJwtBearer(cfg =>
                 //this parameter are the same I used when I create it in AccountController
                 {
-                    cfg.SaveToken = true;
                     cfg.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidateLifetime = true,
@@ -113,8 +111,8 @@ namespace VirtualOfficeCloud
             //here turn on identity (tis need to be before mvc)
             app.UseAuthentication();
 
-            // must go before app.UseMvc()
-            app.UseSession(); 
+            //// must go before app.UseMvc()
+            //app.UseSession(); 
 
             //here create the map route for the path on the browser reach the controller and action
             app.UseMvc(routes =>
